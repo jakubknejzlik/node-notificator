@@ -105,14 +105,11 @@
         return done();
       });
     });
-    it('should not sent unknown notification', function(done) {
+    return it('should not sent unknown notification', function(done) {
       return notificator.notify('blahevent', 'test', function(err) {
         assert.equal(err.message, 'unknown event blahevent');
         return done();
       });
-    });
-    return it('should send notification', function(done) {
-      return notificator.notify('test', 'test', done);
     });
   });
 

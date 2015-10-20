@@ -107,7 +107,7 @@ describe('Notificator',()->
     )
   )
 
-  it('should send notification',(done)->
-    notificator.notify('test','test',done)
-  )
+#  it('should send notification',(done)->
+#    notificator.notify('test','test',done)
+#  )
 )
