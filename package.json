@@ -1,0 +1,32 @@
+{
+  "name": "notificator",
+  "version": "0.0.1",
+  "description": "Library for handling custom notifications, emails, APS, GCM...",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jakubknejzlik/node-notificator.git"
+  },
+  "keywords": [
+    "notifications",
+    "push",
+    "aps",
+    "apns",
+    "gcm"
+  ],
+  "author": "Jakub Knejzlik",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jakubknejzlik/node-notificator/issues"
+  },
+  "homepage": "https://github.com/jakubknejzlik/node-notificator",
+  "dependencies": {
+    "async": "^1.4.2",
+    "nodemailer": "^1.8.0",
+    "swig": "^1.4.2",
+    "validator": "^4.1.0"
+  }
+}
