@@ -17,7 +17,7 @@ class EmailChannel extends NotificatorChannel
     return @transport
 
   sendMessage:(message,destination,callback)->
-    if @options.sender or not validator.isEmail(@options.sender)
+    if @options.sender and not validator.isEmail(@options.sender)
       return callback(new Error('you must specify valid email in options.sender'))
     messageOptions = {
       from: @options.sender

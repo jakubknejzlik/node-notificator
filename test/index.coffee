@@ -26,8 +26,8 @@ emailChannel = new Notificator.EmailChannel({
   defaultTemplate:defaultEmailTemplate
   service: 'MailGun',
   auth: {
-    user: 'postmaster@sandbox8a06541ad48441929ac3c146e6a13dd2.mailgun.org',
-    pass: '...'
+    user: 'no-reply@...',
+    pass: ''
   }
 })
 
@@ -104,6 +104,6 @@ describe('Notificator',()->
   )
 
 #  it('should send notification',(done)->
-#    notificator.notify('test','test',done)
+#    notificator.notify('test','test').then(done).catch(done)
 #  )
 )

@@ -27,8 +27,8 @@
     defaultTemplate: defaultEmailTemplate,
     service: 'MailGun',
     auth: {
-      user: 'postmaster@sandbox8a06541ad48441929ac3c146e6a13dd2.mailgun.org',
-      pass: '...'
+      user: 'no-reply@...',
+      pass: ''
     }
   });
 
