@@ -58,7 +58,7 @@ class Notificator
             @getTemplate(event,_channel,destination.language or @defaultLanguage,(err,event)=>
               return cb(err) if err
               message = @parseTemplate(event,receiver,data)
-              console.log(message,destination)
+#              console.log(message,destination)
               channel.channel.sendMessage(message,destination,cb)
             )
           ,cb)
