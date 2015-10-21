@@ -3,9 +3,7 @@ swig = require('swig')
 class ChannelTemplate
   parsedData:(data)->
     result = {}
-    _data = {}
-    for key,value of data
-      _data[key] = value
+    _data = JSON.parse(JSON.stringify(data))
     _data.data = data
     for key,value of @
       if typeof value is 'string'
