@@ -10,7 +10,7 @@
     'test': new Notificator.EmailChannel.Template('email subject', 'email body', 'email HTML body')
   };
 
-  defaultEmailTemplate = new Notificator.EmailChannel.Template('default subject {{receiver}}', 'default email body {{receiver}} {{JSON.stringify(data)}}', 'default email HTML body {{receiver}}');
+  defaultEmailTemplate = new Notificator.EmailChannel.Template('default subject {{receiver}}', 'default email body {{receiver}} {{JSON.stringify(_data)}}', 'default email HTML body {{receiver}}');
 
   emailDestinations = {
     'test': 'jakub.knej@gmail.com'

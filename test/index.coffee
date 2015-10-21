@@ -9,7 +9,7 @@ emailTemplates = {
 
 defaultEmailTemplate = new Notificator.EmailChannel.Template(
   'default subject {{receiver}}',
-  'default email body {{receiver}} {{JSON.stringify(data)}}',
+  'default email body {{receiver}} {{JSON.stringify(_data)}}',
   'default email HTML body {{receiver}}'
 )
 
