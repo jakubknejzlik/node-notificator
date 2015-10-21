@@ -1,6 +1,6 @@
 {
   "name": "notificator",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Library for handling custom notifications, emails, APS, GCM...",
   "main": "index.js",
   "scripts": {
@@ -28,8 +28,5 @@
     "nodemailer": "^1.8.0",
     "swig": "^1.4.2",
     "validator": "^4.1.0"
-  },
-  "scripts":{
-    "test":"mocha test"
   }
 }
