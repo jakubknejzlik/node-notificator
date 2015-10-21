@@ -42,7 +42,7 @@ class Notificator
 
     async.nextTick(()=>
       if event not in @events
-        return callback(new Error('unknown event ' + event))
+        return deferred.reject(new Error('unknown event ' + event))
 
 #      console.log(event,receiver,data,options,callback)
       data = data or {}

@@ -97,7 +97,7 @@ describe('Notificator',()->
   )
 
   it('should not sent unknown notification',(done)->
-    notificator.notify('blahevent','test',(err)->
+    notificator.notify('blahevent','test').catch((err)->
       assert.equal(err.message,'unknown event blahevent')
       done()
     )

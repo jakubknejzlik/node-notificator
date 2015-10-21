@@ -98,7 +98,7 @@
       });
     });
     return it('should not sent unknown notification', function(done) {
-      return notificator.notify('blahevent', 'test', function(err) {
+      return notificator.notify('blahevent', 'test')["catch"](function(err) {
         assert.equal(err.message, 'unknown event blahevent');
         return done();
       });
