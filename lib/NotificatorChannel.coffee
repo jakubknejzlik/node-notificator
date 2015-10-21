@@ -4,13 +4,13 @@ class ChannelTemplate
   parsedData:(data)->
     result = {}
     _data = JSON.parse(JSON.stringify(data))
-    _data.data = data
+    _data._data = JSON.parse(JSON.stringify(data))
+    console.log(_data)
     for key,value of @
       if typeof value is 'string'
         value = swig.render(value,{locals:_data})
         result[key] = value
     return result
-
 
 
 class NotificatorChannel
