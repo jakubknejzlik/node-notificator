@@ -7,18 +7,10 @@
   Notificator = require('../index');
 
   emailTemplates = {
-    'test': {
-      subject: 'email subject',
-      text: 'email body',
-      html: 'email HTML body'
-    }
+    'test': new Notificator.EmailChannel.Template('email subject', 'email body', 'email HTML body')
   };
 
-  defaultEmailTemplate = {
-    subject: 'default subject {{receiver}}',
-    text: 'default email body {{receiver}}',
-    html: 'default email HTML body {{receiver}}'
-  };
+  defaultEmailTemplate = new Notificator.EmailChannel.Template('default subject {{receiver}}', 'default email body {{receiver}}', 'default email HTML body {{receiver}}');
 
   emailDestinations = {
     'test': 'jakub.knej@gmail.com'

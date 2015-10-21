@@ -1,6 +1,5 @@
 async = require('async')
 util = require('util')
-swig = require('swig')
 
 class Notificator
   @::defaultLanguage = 'en'
@@ -26,10 +25,7 @@ class Notificator
   parseTemplate:(template,receiver,data)->
     data = data or {}
     data.receiver = receiver
-    parsedTemplate = {}
-    for key,value of template
-      parsedTemplate[key] = swig.render(value,{locals:data})
-    return parsedTemplate
+    return template.parsedData(data)
 
 
 

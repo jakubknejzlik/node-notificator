@@ -1,5 +1,17 @@
 swig = require('swig')
 
+class ChannelTemplate
+  parsedData:(data)->
+    result = {}
+    for key,value of @
+      if typeof value is 'string'
+        value = swig.render(value,{locals:data})
+        value = swig.render(value,{locals:{data:data}})
+        result[key] = value
+    return result
+
+
+
 class NotificatorChannel
   constructor:(@options = {})->
     if not @options.getDestinations
@@ -38,6 +50,10 @@ class NotificatorChannel
   validateDestination:(destination)->
     return yes
   validateTemplate:(template)->
+    if template not instanceof ChannelTemplate
+      throw new Error('template must be instance of ChannelTemplate')
     return yes
+
+NotificatorChannel.ChannelTemplate = ChannelTemplate
 
 module.exports = NotificatorChannel
