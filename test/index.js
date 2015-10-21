@@ -10,7 +10,7 @@
     'test': new Notificator.EmailChannel.Template('email subject', 'email body', 'email HTML body')
   };
 
-  defaultEmailTemplate = new Notificator.EmailChannel.Template('default subject {{receiver}}', 'default email body {{receiver}}', 'default email HTML body {{receiver}}');
+  defaultEmailTemplate = new Notificator.EmailChannel.Template('default subject {{receiver}}', 'default email body {{receiver}} {{JSON.stringify(data)}}', 'default email HTML body {{receiver}}');
 
   emailDestinations = {
     'test': 'jakub.knej@gmail.com'
@@ -92,7 +92,7 @@
           sender: 'sender@example.com'
         });
         assert.equal(parsedTemplate.subject, 'default subject test@example.com');
-        assert.equal(parsedTemplate.text, 'default email body test@example.com');
+        assert.equal(parsedTemplate.text, "default email body test@example.com {\"sender\":\"sender@example.com\",\"receiver\":\"test@example.com\"}");
         assert.equal(parsedTemplate.html, 'default email HTML body test@example.com');
         return done();
       });

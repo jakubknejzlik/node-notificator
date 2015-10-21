@@ -9,7 +9,7 @@ emailTemplates = {
 
 defaultEmailTemplate = new Notificator.EmailChannel.Template(
   'default subject {{receiver}}',
-  'default email body {{receiver}}',
+  'default email body {{receiver}} {{JSON.stringify(data)}}',
   'default email HTML body {{receiver}}'
 )
 
@@ -90,7 +90,7 @@ describe('Notificator',()->
       assert.ok(template)
       parsedTemplate = notificator.parseTemplate(template,'test@example.com',{sender:'sender@example.com'})
       assert.equal(parsedTemplate.subject,'default subject test@example.com')
-      assert.equal(parsedTemplate.text,'default email body test@example.com')
+      assert.equal(parsedTemplate.text,"default email body test@example.com {\"sender\":\"sender@example.com\",\"receiver\":\"test@example.com\"}")
       assert.equal(parsedTemplate.html,'default email HTML body test@example.com')
       done()
     )
