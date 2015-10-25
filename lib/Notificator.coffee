@@ -23,9 +23,10 @@ class Notificator
       callback(null,message)
     )
 
-  parseTemplate:(template,receiver,data)->
+  parseTemplate:(template,receiver,destination,data)->
     data = data or {}
     data.receiver = receiver
+    data.destination = destination
     return template.parsedData(data)
 
 
@@ -57,7 +58,7 @@ class Notificator
           async.forEach(destinations,(destination,cb)=>
             @getTemplate(event,_channel,destination.language or @defaultLanguage,(err,event)=>
               return cb(err) if err
-              message = @parseTemplate(event,receiver,data)
+              message = @parseTemplate(event,receiver,destination,data)
 #              console.log(message,destination)
               channel.channel.sendMessage(message,destination,cb)
             )
