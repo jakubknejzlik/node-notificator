@@ -49,8 +49,6 @@
       template.alert = 'notification test' + event + '_' + language;
       return callback(null, template);
     },
-    cert: fs.readFileSync(__dirname + '/apns-cert.pem'),
-    key: fs.readFileSync(__dirname + '/apns-key.pem'),
     passphrase: 'hovno',
     production: true
   });

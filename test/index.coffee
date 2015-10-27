@@ -43,8 +43,8 @@ apnsChannel = new Notificator.APNSChannel({
     template.badge = 999
     template.alert = 'notification test' + event + '_' + language
     callback(null,template)
-  cert:fs.readFileSync(__dirname + '/apns-cert.pem')
-  key:fs.readFileSync(__dirname + '/apns-key.pem')
+#  cert:fs.readFileSync(__dirname + '/apns-cert.pem')
+#  key:fs.readFileSync(__dirname + '/apns-key.pem')
   passphrase:'hovno'
   production:yes
 })
@@ -125,7 +125,7 @@ describe('Notificator',()->
       assert.ok(templates)
       assert.equal(templates.length,1)
       template = templates[0]
-      parsedTemplate = notificator.parseTemplate(template,'test@example.com',{sender:'sender@example.com'})
+      parsedTemplate = notificator.getMessageFromTemplate(template,'test@example.com',{sender:'sender@example.com'})
       assert.equal(parsedTemplate.subject,'default subject test@example.com')
       assert.equal(parsedTemplate.text,"default email body test@example.com {\"receiver\":\"test@example.com\",\"destination\":{\"sender\":\"sender@example.com\"}}")
       assert.equal(parsedTemplate.html,'default email HTML body test@example.com')
