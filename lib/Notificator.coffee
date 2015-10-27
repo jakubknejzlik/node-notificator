@@ -17,17 +17,19 @@ class Notificator
   addChannel:(name,channel)->
     @channels.push({name:name,channel:channel})
 
-  getTemplate:(event,channel,language,callback)->
-    channel.getTemplate(event,language,(err,message)->
+  getTemplates:(event,channel,language,callback)->
+    channel.getTemplates(event,language,(err,messages)->
       return callback(err) if err
-      callback(null,message)
+      if messages and not util.isArray(messages)
+        messages = [messages]
+      callback(null,messages)
     )
 
-  parseTemplate:(template,receiver,destination,data)->
+  getMessageFromTemplate:(template,receiver,destination,data)->
     data = data or {}
     data.receiver = receiver
     data.destination = destination
-    return template.parsedData(data)
+    return template.getMessage(data)
 
 
 
@@ -55,12 +57,13 @@ class Notificator
         _channel = channel.channel
         _channel.getDestinations(receiver,(err,destinations)=>
           return cb(err) if err
-          async.forEach(destinations,(destination,cb)=>
-            @getTemplate(event,_channel,destination.language or @defaultLanguage,(err,event)=>
+          async.forEach(destinations,(destination,cb2)=>
+            @getTemplates(event,_channel,destination.language or @defaultLanguage,(err,templates)=>
               return cb(err) if err
-              message = @parseTemplate(event,receiver,destination,data)
-#              console.log(message,destination)
-              channel.channel.sendMessage(message,destination,cb)
+              async.forEach(templates,(template,cb)=>
+                message = @getMessageFromTemplate(template,receiver,destination,data)
+                channel.channel.sendMessage(message,destination,cb)
+              ,cb2)
             )
           ,cb)
         )

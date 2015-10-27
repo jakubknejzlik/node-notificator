@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/jakubknejzlik/node-notificator",
   "dependencies": {
+    "apn": "^1.7.5",
     "async": "^1.4.2",
     "nodemailer": "^1.8.0",
     "q": "^1.4.1",

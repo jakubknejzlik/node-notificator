@@ -1,13 +1,15 @@
 swig = require('swig')
 
 class ChannelTemplate
-  parsedData:(data)->
+  getMessage:(data)->
     result = {}
     _data = JSON.parse(JSON.stringify(data))
     _data._data = JSON.parse(JSON.stringify(data))
     for key,value of @
       if typeof value is 'string'
         value = swig.render(value,{locals:_data})
+        result[key] = value
+      else
         result[key] = value
     return result
 
@@ -17,9 +19,9 @@ class NotificatorChannel
     if not @options.getDestinations
       @options.getDestinations = (obj,callback)->
         callback(new Error('options.getDestinations not specified'))
-    if not @options.getTemplate
-      @options.getTemplate = (obj,callback)->
-        callback(new Error('options.getTemplate not specified'))
+    if not @options.getTemplates
+      @options.getTemplates = (obj,callback)->
+        callback(new Error('options.getTemplates not specified'))
 
   getDestinations:(receiver,callback)->
     @options.getDestinations(receiver,(err,destinations)=>
@@ -32,8 +34,8 @@ class NotificatorChannel
         callback(err)
     )
 
-  getTemplate:(event,language,callback)->
-    @options.getTemplate(event,language,(err,template)=>
+  getTemplates:(event,language,callback)->
+    @options.getTemplates(event,language,(err,template)=>
       return callback(err) if err
       if not template
         template = @options.defaultTemplate
