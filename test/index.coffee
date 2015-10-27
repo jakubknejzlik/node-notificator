@@ -1,3 +1,4 @@
+fs = require('fs')
 assert = require('assert')
 
 Notificator = require('../index')
@@ -14,13 +15,16 @@ defaultEmailTemplate = new Notificator.EmailChannel.Template(
 )
 
 emailDestinations = {
-  'test':'jakub.knej@gmail.com'
+  'test':'jakub.knejzlik@gmail.com'
+}
+apnsDestinations = {
+  'test':'d1ed7c9829ab244e52645e18008f49867bcd1fa04a4913274d5a23071d5af3d8'
 }
 
 emailChannel = new Notificator.EmailChannel({
   getDestinations:(receiver,callback)->
     callback(null,[emailDestinations[receiver]])
-  getTemplate:(event,language,callback)->
+  getTemplates:(event,language,callback)->
     console.log(event,language)
     callback(null,emailTemplates[event])
   defaultTemplate:defaultEmailTemplate
@@ -31,22 +35,51 @@ emailChannel = new Notificator.EmailChannel({
   }
 })
 
+apnsChannel = new Notificator.APNSChannel({
+  getDestinations:(receiver,callback)->
+    callback(null,[apnsDestinations[receiver]])
+  getTemplates:(event,language,callback)->
+    template = new Notificator.APNSChannel.Template()
+    template.badge = 999
+    template.alert = 'notification test' + event + '_' + language
+    callback(null,template)
+  cert:fs.readFileSync(__dirname + '/apns-cert.pem')
+  key:fs.readFileSync(__dirname + '/apns-key.pem')
+  passphrase:'hovno'
+  production:yes
+})
+
 describe('Notificator',()->
   notificator = new Notificator()
 
   notificator.registerEvent('test')
 
-  notificator.addChannel('mail',emailChannel)
+  notificator.addChannel('email',emailChannel)
+  notificator.addChannel('apns',apnsChannel)
 
-  it('should have one channel',()->
-    assert.equal(notificator.channels.length,1)
+#  it.only('should send push notification',(done)->
+#    @timeout(5000)
+#    myDevice = new apn.Device('d1ed7c9829ab244e52645e18008f49867bcd1fa04a4913274d5a23071d5af3d8');
+#
+#    note = new apn.Notification();
+#
+#    note.badge = 2;
+#    note.alert = "asfadf"
+#
+#    conn.pushNotification(note, myDevice);
+#  )
+
+  it('should have number of channels',()->
+    assert.equal(notificator.channels.length,2)
   )
 
   it('should find template',(done)->
     channel = notificator.channels[0].channel
     assert.ok(channel)
-    notificator.getTemplate('test',channel,'en',(err,template)->
+    notificator.getTemplates('test',channel,'en',(err,templates)->
       assert.ifError(err)
+      assert.equal(templates.length,1)
+      template = templates[0]
       assert.deepEqual(template,emailTemplates['test'])
       done()
     )
@@ -55,8 +88,10 @@ describe('Notificator',()->
   it('should return default template if not found',(done)->
     channel = notificator.channels[0].channel
     assert.ok(channel)
-    notificator.getTemplate('blah',channel,'en',(err,template)->
+    notificator.getTemplates('blah',channel,'en',(err,templates)->
       assert.ifError(err)
+      assert.equal(templates.length,1)
+      template = templates[0]
       assert.deepEqual(template,defaultEmailTemplate)
       done()
     )
@@ -85,9 +120,11 @@ describe('Notificator',()->
   it('should parse template',(done)->
     channel = notificator.channels[0].channel
     assert.ok(channel)
-    notificator.getTemplate('blah',channel,'en',(err,template)->
+    notificator.getTemplates('blah',channel,'en',(err,templates)->
       assert.ifError(err)
-      assert.ok(template)
+      assert.ok(templates)
+      assert.equal(templates.length,1)
+      template = templates[0]
       parsedTemplate = notificator.parseTemplate(template,'test@example.com',{sender:'sender@example.com'})
       assert.equal(parsedTemplate.subject,'default subject test@example.com')
       assert.equal(parsedTemplate.text,"default email body test@example.com {\"receiver\":\"test@example.com\",\"destination\":{\"sender\":\"sender@example.com\"}}")
@@ -104,6 +141,9 @@ describe('Notificator',()->
   )
 
 #  it('should send notification',(done)->
-#    notificator.notify('test','test').then(done).catch(done)
+#    @timeout(5000)
+#    notificator.notify('test','test').then(()->
+#      setTimeout(done,4000)
+#    ).catch(done)
 #  )
 )

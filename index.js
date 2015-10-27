@@ -6,4 +6,6 @@
 
   module.exports.EmailChannel = require('./lib/channels/EmailChannel');
 
+  module.exports.APNSChannel = require('./lib/channels/APNSChannel');
+
 }).call(this);
