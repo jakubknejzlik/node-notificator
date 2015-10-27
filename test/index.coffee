@@ -54,7 +54,7 @@ describe('Notificator',()->
 
   notificator.registerEvent('test')
 
-#  notificator.addChannel('email',emailChannel)
+  notificator.addChannel('email',emailChannel)
   notificator.addChannel('apns',apnsChannel)
 
 #  it.only('should send push notification',(done)->

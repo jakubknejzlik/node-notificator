@@ -59,6 +59,7 @@
     var notificator;
     notificator = new Notificator();
     notificator.registerEvent('test');
+    notificator.addChannel('email', emailChannel);
     notificator.addChannel('apns', apnsChannel);
     it('should have number of channels', function() {
       return assert.equal(notificator.channels.length, 2);
@@ -119,7 +120,7 @@
         assert.ok(templates);
         assert.equal(templates.length, 1);
         template = templates[0];
-        parsedTemplate = notificator.parseTemplate(template, 'test@example.com', {
+        parsedTemplate = notificator.getMessageFromTemplate(template, 'test@example.com', {
           sender: 'sender@example.com'
         });
         assert.equal(parsedTemplate.subject, 'default subject test@example.com');
