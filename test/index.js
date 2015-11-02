@@ -51,8 +51,6 @@
       template = new Notificator.APNSChannel.Template('{{value}} notification test' + event + '_' + language, '{{value+1}}');
       return callback(null, template);
     },
-    cert: fs.readFileSync(__dirname + '/apns-cert.pem'),
-    key: fs.readFileSync(__dirname + '/apns-key.pem'),
     passphrase: 'blah',
     production: true
   });

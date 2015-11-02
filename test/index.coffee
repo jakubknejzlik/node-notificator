@@ -44,8 +44,8 @@ apnsChannel = new Notificator.APNSChannel({
   getTemplates:(event,language,callback)->
     template = new Notificator.APNSChannel.Template('{{value}} notification test' + event + '_' + language,'{{value+1}}')
     callback(null,template)
-  cert:fs.readFileSync(__dirname + '/apns-cert.pem')
-  key:fs.readFileSync(__dirname + '/apns-key.pem')
+#  cert:fs.readFileSync(__dirname + '/apns-cert.pem')
+#  key:fs.readFileSync(__dirname + '/apns-key.pem')
   passphrase:'blah'
   production:yes
 })
