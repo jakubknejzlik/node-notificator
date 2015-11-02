@@ -8,4 +8,6 @@
 
   module.exports.APNSChannel = require('./lib/channels/APNSChannel');
 
+  module.exports.GCMChannel = require('./lib/channels/GCMChannel');
+
 }).call(this);

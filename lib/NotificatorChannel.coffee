@@ -1,15 +1,21 @@
 swig = require('swig')
 
 class ChannelTemplate
+
   getMessage:(data)->
-    result = {}
     _data = JSON.parse(JSON.stringify(data))
     _data._data = JSON.parse(JSON.stringify(data))
-    for key,value of @
-      if typeof value is 'string'
-        value = swig.render(value,{locals:_data})
+    return @parseObjectValues(@,_data)
+
+  parseObjectValues:(object,data)->
+    result = {}
+    for key,value of object
+      if typeof value is 'object'
+        result[key] = @parseObjectValues(value,data)
+      else if typeof value is 'string'
+        value = swig.render(value,{locals:data})
         result[key] = value
-      else
+      else if typeof value isnt 'function'
         result[key] = value
     return result
 

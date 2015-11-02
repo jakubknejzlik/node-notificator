@@ -20,6 +20,9 @@ emailDestinations = {
 apnsDestinations = {
   'test':'d1ed7c9829ab244e52645e18008f49867bcd1fa04a4913274d5a23071d5af3d8'
 }
+gcmDestinations = {
+  'test':'dNUcjs0FMK0:APA91bEtyrRYwNGawBNNrD7TmchAVxMoeylDQiKViS74IvD5GPMo9U4RLC3EBHtoXY6aJFjW22aFg0rmrchlWil06sQQ_m8yAVMcM5ZwhQvUWuBVvA14fWmSOUlPu25uBNFVrYzCzb30'
+}
 
 emailChannel = new Notificator.EmailChannel({
   getDestinations:(receiver,callback)->
@@ -39,14 +42,26 @@ apnsChannel = new Notificator.APNSChannel({
   getDestinations:(receiver,callback)->
     callback(null,[apnsDestinations[receiver]])
   getTemplates:(event,language,callback)->
-    template = new Notificator.APNSChannel.Template()
-    template.badge = 999
-    template.alert = 'notification test' + event + '_' + language
+    template = new Notificator.APNSChannel.Template('{{value}} notification test' + event + '_' + language,'{{value+1}}')
     callback(null,template)
-#  cert:fs.readFileSync(__dirname + '/apns-cert.pem')
-#  key:fs.readFileSync(__dirname + '/apns-key.pem')
-  passphrase:'hovno'
+  cert:fs.readFileSync(__dirname + '/apns-cert.pem')
+  key:fs.readFileSync(__dirname + '/apns-key.pem')
+  passphrase:'blah'
   production:yes
+})
+
+gcmChannel = new Notificator.GCMChannel({
+  getDestinations:(receiver,callback)->
+    callback(null,[gcmDestinations[receiver]])
+  getTemplates:(event,language,callback)->
+    template = new Notificator.GCMChannel.Template({
+      data:{
+        title:'{{value}}' + event + '_' + language,
+        message:'{{value}} body'
+      }
+    })
+    callback(null,template)
+  apiKey:'...'
 })
 
 describe('Notificator',()->
@@ -56,6 +71,7 @@ describe('Notificator',()->
 
   notificator.addChannel('email',emailChannel)
   notificator.addChannel('apns',apnsChannel)
+  notificator.addChannel('gcm',gcmChannel)
 
 #  it.only('should send push notification',(done)->
 #    @timeout(5000)
@@ -70,7 +86,7 @@ describe('Notificator',()->
 #  )
 
   it('should have number of channels',()->
-    assert.equal(notificator.channels.length,2)
+    assert.equal(notificator.channels.length,3)
   )
 
   it('should find template',(done)->
@@ -140,10 +156,8 @@ describe('Notificator',()->
     )
   )
 
-#  it('should send notification',(done)->
+#  it.only('should send notification',(done)->
 #    @timeout(5000)
-#    notificator.notify('test','test').then(()->
-#      setTimeout(done,4000)
-#    ).catch(done)
+#    notificator.notify('test','test',{value:970},{channels:['gcm']}).then(done).catch(done)
 #  )
 )

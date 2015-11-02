@@ -5,10 +5,11 @@ Q = require('q')
 class Notificator
   @::defaultLanguage = 'en'
   @::channels = []
-  @::events = []
+  @::events = null
   constructor:(@options = {})->
 
   registerEvent:(event)->
+    @events = @events or []
     @events.push(event)
   registerEvents:(events)->
     for event in events
@@ -44,7 +45,7 @@ class Notificator
       options = undefined
 
     async.nextTick(()=>
-      if event not in @events
+      if @events and event not in @events
         return deferred.reject(new Error('unknown event ' + event))
 
 #      console.log(event,receiver,data,options,callback)
@@ -52,7 +53,7 @@ class Notificator
       data._event = event
 
       async.forEach(@channels,(channel,cb)=>
-        if util.isArray(@options.channels) and channel.name not in @options.channels
+        if util.isArray(options?.channels) and channel.name not in options.channels
           return cb()
         _channel = channel.channel
         _channel.getDestinations(receiver,(err,destinations)=>
