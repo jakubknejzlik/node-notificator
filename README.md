@@ -19,8 +19,10 @@ notificator.registerEvent('test') // you can specify wich events are valid
 
 // create your channels
 
+var messageData = {key:'value'}
+
 var receiver = {}; // use your own model logic, this object is sent to getDestinations method as receiver (you can use for example sequelize object).
-notificator.notify('test',receiver,{value:970},{channels:['gcm']})
+notificator.notify('test',receiver,messageData,{channels:['gcm']})
     .then(done)
     .catch(done)
 
