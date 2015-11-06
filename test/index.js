@@ -28,7 +28,7 @@
 
   emailChannel = new Notificator.EmailChannel({
     getDestinations: function(receiver, callback) {
-      return callback(null, [emailDestinations[receiver]]);
+      return callback(null, [new Notificator.EmailChannel.Destination(emailDestinations[receiver], 'en')]);
     },
     getTemplates: function(event, language, callback) {
       console.log(event, language);
@@ -115,7 +115,8 @@
       return channel.getDestinations('test', function(err, destinations) {
         assert.ifError(err);
         assert.equal(destinations.length, 1);
-        assert.equal(destinations[0], emailDestinations['test']);
+        assert.equal(destinations[0].destination, emailDestinations['test']);
+        assert.equal(destinations[0].language, 'en');
         return done();
       });
     });

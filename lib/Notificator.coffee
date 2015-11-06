@@ -2,6 +2,7 @@ async = require('async')
 util = require('util')
 Q = require('q')
 
+
 class Notificator
   @::defaultLanguage = 'en'
   @::channels = []

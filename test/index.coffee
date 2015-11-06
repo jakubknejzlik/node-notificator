@@ -26,7 +26,7 @@ gcmDestinations = {
 
 emailChannel = new Notificator.EmailChannel({
   getDestinations:(receiver,callback)->
-    callback(null,[emailDestinations[receiver]])
+    callback(null,[new Notificator.EmailChannel.Destination(emailDestinations[receiver],'en')])
   getTemplates:(event,language,callback)->
     console.log(event,language)
     callback(null,emailTemplates[event])
@@ -119,7 +119,8 @@ describe('Notificator',()->
     channel.getDestinations('test',(err,destinations)->
       assert.ifError(err)
       assert.equal(destinations.length,1)
-      assert.equal(destinations[0],emailDestinations['test'])
+      assert.equal(destinations[0].destination,emailDestinations['test'])
+      assert.equal(destinations[0].language,'en')
       done()
     )
   )

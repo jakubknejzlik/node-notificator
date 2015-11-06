@@ -1,5 +1,10 @@
 swig = require('swig')
 
+
+class Destination
+  constructor:(@destination,@language = null)->
+
+
 class ChannelTemplate
 
   getMessage:(data)->
@@ -34,6 +39,8 @@ class NotificatorChannel
       return callback(err) if err
       try
         for destination in destinations
+          if destination not instanceof Destination
+            destination = new Destination(destination)
           @validateDestination(destination)
         callback(null,destinations)
       catch err
@@ -56,12 +63,14 @@ class NotificatorChannel
     return callback(new Error('sendMessage not implemented'))
 
   validateDestination:(destination)->
-    return yes
+    return destination instanceof Destination
   validateTemplate:(template)->
     if template not instanceof ChannelTemplate
       throw new Error('template must be instance of ChannelTemplate')
     return yes
 
 NotificatorChannel.ChannelTemplate = ChannelTemplate
+NotificatorChannel.Destination = Destination
+
 
 module.exports = NotificatorChannel

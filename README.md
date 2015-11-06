@@ -32,10 +32,10 @@ notificator.notify('test',receiver,messageData,{channels:['gcm']})
 ```
 var emailChannel = new Notificator.EmailChannel({
   getDestinations:function(receiver,callback){
-    callback(null,[receiver.email]) // suppose we have (for example sequelize) user with email attribute
+    callback(null,[new Notificator.EmailChannel.Destination(receiver.email)]) // suppose we have (for example sequelize) user with email attribute
   }
   getTemplates:function(event,language,callback){
-    var template = Notificator.EmailChannel.Template(
+    var template = new Notificator.EmailChannel.Template(
       'default subject {{receiver}}',
       'default email body {{receiver}} {{JSON.stringify(_data)}}',
       'default email HTML body {{receiver}}'
@@ -59,7 +59,7 @@ notificator.addChannel('email',emailChannel)
 var apnsChannel = new Notificator.APNSChannel({
   getDestinations:function(receiver,callback){
     receiver.getApnsDevice().then(function(device){ // suppose we have (for example sequelize) user object with apnsDevice
-        callback(null,[device.token]);
+        callback(null,[new Notificator.APNSChannel.Destination(device.token,device.language)]);
     }).catch(callback)
   }
   getTemplates:function(event,language,callback){
@@ -81,7 +81,7 @@ notificator.addChannel('apns',apnsChannel)
 var gcmChannel = new Notificator.GCMChannel({
   getDestinations:function(receiver,callback){
     receiver.getGcmDevice().then(function(device){ // suppose we have (for example sequelize) user object with gcmDevice
-      callback(null,[device.token]);
+      callback(null,[new Notificator.GCMChannel.Destination(device.token,device.language)]);
     }).catch(callback)
   },
   getTemplates:function(event,language,callback){

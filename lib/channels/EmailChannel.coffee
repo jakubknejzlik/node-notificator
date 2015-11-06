@@ -39,8 +39,9 @@ class EmailChannel extends NotificatorChannel
       throw new Error('email template must have text or html')
 
   validateDestination:(destination)->
-    if not validator.isEmail(destination)
-      throw new Error(destination + ' is not valid email')
+    super(destination)
+    if not validator.isEmail(destination.destination)
+      throw new Error(destination.destination + ' is not valid email')
     return yes
 
 
