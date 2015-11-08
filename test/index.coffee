@@ -34,8 +34,8 @@ emailChannel = new Notificator.EmailChannel({
   defaultTemplate:defaultEmailTemplate
   service: 'MailGun',
   auth: {
-    user: 'postmaster@sandbox8a06541ad48441929ac3c146e6a13dd2.mailgun.org',
-    pass: '6e8d34a50423e5ab1ba64d7e10157e0d'
+    user: 'postmaster@...',
+    pass: ''
   }
 })
 
@@ -159,8 +159,8 @@ describe('Notificator',()->
     )
   )
 
-  it.only('should send notification',(done)->
-    @timeout(5000)
-    notificator.notify('test','test',{value:970},{__channels:['gcm']}).then(done).catch(done)
-  )
+#  it.only('should send notification',(done)->
+#    @timeout(5000)
+#    notificator.notify('test','test',{value:970},{__channels:['gcm']}).then(done).catch(done)
+#  )
 )
