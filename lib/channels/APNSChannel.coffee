@@ -24,7 +24,7 @@ class APNSChannel extends NotificatorChannel
     super(options)
 
   sendMessage:(message,destination,callback)->
-    device = new apn.Device(destination)
+    device = new apn.Device(destination.destination)
     @connection.pushNotification(message,device)
     async.nextTick(()->
       callback() if callback
