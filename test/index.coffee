@@ -26,6 +26,7 @@ gcmDestinations = {
 
 emailChannel = new Notificator.EmailChannel({
   getDestinations:(receiver,callback)->
+    console.log('aaa')
     callback(null,[new Notificator.EmailChannel.Destination(emailDestinations[receiver],'en')])
   getTemplates:(event,language,callback)->
     console.log(event,language)
@@ -33,8 +34,8 @@ emailChannel = new Notificator.EmailChannel({
   defaultTemplate:defaultEmailTemplate
   service: 'MailGun',
   auth: {
-    user: 'no-reply@...',
-    pass: ''
+    user: 'postmaster@sandbox8a06541ad48441929ac3c146e6a13dd2.mailgun.org',
+    pass: '6e8d34a50423e5ab1ba64d7e10157e0d'
   }
 })
 
@@ -70,8 +71,8 @@ describe('Notificator',()->
   notificator.registerEvent('test')
 
   notificator.addChannel('email',emailChannel)
-  notificator.addChannel('apns',apnsChannel)
-  notificator.addChannel('gcm',gcmChannel)
+#  notificator.addChannel('apns',apnsChannel)
+#  notificator.addChannel('gcm',gcmChannel)
 
 #  it.only('should send push notification',(done)->
 #    @timeout(5000)
@@ -158,8 +159,8 @@ describe('Notificator',()->
     )
   )
 
-#  it.only('should send notification',(done)->
-#    @timeout(5000)
-#    notificator.notify('test','test',{value:970},{channels:['gcm']}).then(done).catch(done)
-#  )
+  it.only('should send notification',(done)->
+    @timeout(5000)
+    notificator.notify('test','test',{value:970},{__channels:['gcm']}).then(done).catch(done)
+  )
 )

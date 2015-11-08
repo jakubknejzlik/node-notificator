@@ -21,11 +21,12 @@ class EmailChannel extends NotificatorChannel
       return callback(new Error('you must specify valid email in options.sender'))
     messageOptions = {
       from: @options.sender
-      to: destination
+      to: destination.destination
       subject: message.subject
       text: message.text
       html: message.html
     }
+    console.log('sending message',messageOptions)
 
     @getTransport().sendMail(messageOptions,callback)
 

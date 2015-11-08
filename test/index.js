@@ -37,8 +37,8 @@
     defaultTemplate: defaultEmailTemplate,
     service: 'MailGun',
     auth: {
-      user: 'no-reply@...',
-      pass: ''
+      user: 'postmaster@sandbox8a06541ad48441929ac3c146e6a13dd2.mailgun.org',
+      pass: '6e8d34a50423e5ab1ba64d7e10157e0d'
     }
   });
 
@@ -77,8 +77,6 @@
     notificator = new Notificator();
     notificator.registerEvent('test');
     notificator.addChannel('email', emailChannel);
-    notificator.addChannel('apns', apnsChannel);
-    notificator.addChannel('gcm', gcmChannel);
     it('should have number of channels', function() {
       return assert.equal(notificator.channels.length, 3);
     });
@@ -149,11 +147,19 @@
         return done();
       });
     });
-    return it('should not sent unknown notification', function(done) {
+    it('should not sent unknown notification', function(done) {
       return notificator.notify('blahevent', 'test')["catch"](function(err) {
         assert.equal(err.message, 'unknown event blahevent');
         return done();
       });
+    });
+    return it.only('should send notification', function(done) {
+      this.timeout(5000);
+      return notificator.notify('test', 'test', {
+        value: 970
+      }, {
+        __channels: ['gcm']
+      }).then(done)["catch"](done);
     });
   });
 
