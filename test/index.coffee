@@ -29,7 +29,7 @@ emailChannel = new Notificator.EmailChannel({
     callback(null,[new Notificator.EmailChannel.Destination(emailDestinations[receiver],'en')])
   getTemplates:(event,language,callback)->
     console.log(event,language)
-    callback(null,emailTemplates[event])
+    callback(null,[emailTemplates[event]])
   defaultTemplate:defaultEmailTemplate
   service: 'MailGun',
   auth: {
@@ -43,7 +43,7 @@ apnsChannel = new Notificator.APNSChannel({
     callback(null,[apnsDestinations[receiver]])
   getTemplates:(event,language,callback)->
     template = new Notificator.APNSChannel.Template('{{value}} notification test' + event + '_' + language,'{{value+1}}')
-    callback(null,template)
+    callback(null,[template])
 #  cert:fs.readFileSync(__dirname + '/apns-cert.pem')
 #  key:fs.readFileSync(__dirname + '/apns-key.pem')
   passphrase:'blah'
@@ -97,6 +97,7 @@ describe('Notificator',()->
       assert.equal(templates.length,1)
       template = templates[0]
       assert.deepEqual(template,emailTemplates['test'])
+      assert.ok(template instanceof Notificator.Channel.ChannelTemplate)
       done()
     )
   )

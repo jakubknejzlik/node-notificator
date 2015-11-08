@@ -32,7 +32,7 @@
     },
     getTemplates: function(event, language, callback) {
       console.log(event, language);
-      return callback(null, emailTemplates[event]);
+      return callback(null, [emailTemplates[event]]);
     },
     defaultTemplate: defaultEmailTemplate,
     service: 'MailGun',
@@ -49,7 +49,7 @@
     getTemplates: function(event, language, callback) {
       var template;
       template = new Notificator.APNSChannel.Template('{{value}} notification test' + event + '_' + language, '{{value+1}}');
-      return callback(null, template);
+      return callback(null, [template]);
     },
     passphrase: 'blah',
     production: true
@@ -92,6 +92,7 @@
         assert.equal(templates.length, 1);
         template = templates[0];
         assert.deepEqual(template, emailTemplates['test']);
+        assert.ok(template instanceof Notificator.Channel.ChannelTemplate);
         return done();
       });
     });

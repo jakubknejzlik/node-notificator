@@ -50,13 +50,19 @@ class NotificatorChannel
   getTemplates:(event,language,callback)->
     @options.getTemplates(event,language,(err,templates)=>
       return callback(err) if err
-      if templates and Array.isArray(templates)
+
+      if templates and not Array.isArray(templates)
         templates = [templates]
-      if not templates
-        templates = @options.defaultTemplate
+
+      templates = templates.filter((x)->
+        return x
+      )
+
+      if templates.length is 0 and @options.defaultTemplate
+        templates = [@options.defaultTemplate]
       try
         for template in templates
-          @validateTemplate(templates)
+          @validateTemplate(template)
         callback(null,templates)
       catch err
         callback(err)
@@ -69,7 +75,7 @@ class NotificatorChannel
     return destination instanceof Destination
   validateTemplate:(template)->
     if template not instanceof ChannelTemplate
-      throw new Error('template must be instance of ChannelTemplate')
+      throw new Error('template must be instance of ChannelTemplate (' + typeof template + ')')
     return yes
 
 NotificatorChannel.ChannelTemplate = ChannelTemplate
