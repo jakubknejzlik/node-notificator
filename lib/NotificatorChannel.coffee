@@ -31,7 +31,7 @@ class NotificatorChannel
       @options.getDestinations = (obj,callback)->
         callback(new Error('options.getDestinations not specified'))
     if not @options.getTemplates
-      @options.getTemplates = (obj,callback)->
+      @options.getTemplates = (obj,language,callback)->
         callback(new Error('options.getTemplates not specified'))
 
   getDestinations:(receiver,callback)->
