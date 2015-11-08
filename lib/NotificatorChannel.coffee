@@ -48,13 +48,16 @@ class NotificatorChannel
     )
 
   getTemplates:(event,language,callback)->
-    @options.getTemplates(event,language,(err,template)=>
+    @options.getTemplates(event,language,(err,templates)=>
       return callback(err) if err
-      if not template
-        template = @options.defaultTemplate
+      if templates and Array.isArray(templates)
+        templates = [templates]
+      if not templates
+        templates = @options.defaultTemplate
       try
-        @validateTemplate(template)
-        callback(null,template)
+        for template in templates
+          @validateTemplate(templates)
+        callback(null,templates)
       catch err
         callback(err)
     )
