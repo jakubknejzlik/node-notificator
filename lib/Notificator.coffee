@@ -49,7 +49,7 @@ class Notificator
       if @events and event not in @events
         return deferred.reject(new Error('unknown event ' + event))
 
-#      console.log(event,receiver,data,options,callback)
+      #      console.log(event,receiver,data,options,callback)
       data = data or {}
       data._event = event
 

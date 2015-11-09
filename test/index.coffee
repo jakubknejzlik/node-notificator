@@ -71,8 +71,8 @@ describe('Notificator',()->
   notificator.registerEvent('test')
 
   notificator.addChannel('email',emailChannel)
-#  notificator.addChannel('apns',apnsChannel)
-#  notificator.addChannel('gcm',gcmChannel)
+  notificator.addChannel('apns',apnsChannel)
+  notificator.addChannel('gcm',gcmChannel)
 
 #  it.only('should send push notification',(done)->
 #    @timeout(5000)

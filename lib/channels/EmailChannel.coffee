@@ -26,8 +26,6 @@ class EmailChannel extends NotificatorChannel
       text: message.text
       html: message.html
     }
-    console.log('sending message',messageOptions)
-
     @getTransport().sendMail(messageOptions,callback)
 
   validateTemplate:(template)->

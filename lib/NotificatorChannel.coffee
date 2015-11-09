@@ -35,13 +35,15 @@ class NotificatorChannel
         callback(new Error('options.getTemplates not specified'))
 
   getDestinations:(receiver,callback)->
-    @options.getDestinations(receiver,(err,destinations)=>
+    @options.getDestinations(receiver,(err,_destinations)=>
       return callback(err) if err
       try
-        for destination in destinations
+        destinations = []
+        for destination in _destinations
           if destination not instanceof Destination
             destination = new Destination(destination)
           @validateDestination(destination)
+          destinations.push(destination)
         callback(null,destinations)
       catch err
         callback(err)
@@ -51,6 +53,7 @@ class NotificatorChannel
     @options.getTemplates(event,language,(err,templates)=>
       return callback(err) if err
 
+      templates = templates or []
       if templates and not Array.isArray(templates)
         templates = [templates]
 

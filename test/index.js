@@ -78,6 +78,8 @@
     notificator = new Notificator();
     notificator.registerEvent('test');
     notificator.addChannel('email', emailChannel);
+    notificator.addChannel('apns', apnsChannel);
+    notificator.addChannel('gcm', gcmChannel);
     it('should have number of channels', function() {
       return assert.equal(notificator.channels.length, 3);
     });
