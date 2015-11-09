@@ -103,7 +103,7 @@ describe('Notificator',()->
     )
   )
 
-  it.only('should get message from template',()->
+  it('should get message from template',()->
     template = new Notificator.EmailChannel.Template('subject:{{subject}}','text:{{text}}','html:{{html}}')
     message = template.getMessage({subject:'subj',text:'txt',html:'HTML'})
     assert.equal(message.subject,'subject:subj')

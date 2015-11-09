@@ -97,7 +97,7 @@
         return done();
       });
     });
-    it.only('should get message from template', function() {
+    it('should get message from template', function() {
       var message, template;
       template = new Notificator.EmailChannel.Template('subject:{{subject}}', 'text:{{text}}', 'html:{{html}}');
       message = template.getMessage({
