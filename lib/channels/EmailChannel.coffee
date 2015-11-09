@@ -26,6 +26,7 @@ class EmailChannel extends NotificatorChannel
       text: message.text
       html: message.html
     }
+    @debug(messageOptions)
     @getTransport().sendMail(messageOptions,callback)
 
   validateTemplate:(template)->

@@ -81,6 +81,10 @@ class NotificatorChannel
       throw new Error('template must be instance of ChannelTemplate (' + typeof template + ')')
     return yes
 
+  debug:()->
+    if @options.debug
+      console.log.apply(console,arguments)
+
 NotificatorChannel.ChannelTemplate = ChannelTemplate
 NotificatorChannel.Destination = Destination
 
