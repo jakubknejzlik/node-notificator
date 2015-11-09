@@ -66,6 +66,7 @@ class NotificatorChannel
       try
         for template in templates
           @validateTemplate(template)
+        @debug('gottemplates',drr,templates)
         callback(null,templates)
       catch err
         callback(err)
