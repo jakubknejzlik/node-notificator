@@ -103,6 +103,20 @@ describe('Notificator',()->
     )
   )
 
+  it.only('should get message from template',()->
+    template = new Notificator.EmailChannel.Template('subject:{{subject}}','text:{{text}}','html:{{html}}')
+    message = template.getMessage({subject:'subj',text:'txt',html:'HTML'})
+    assert.equal(message.subject,'subject:subj')
+    assert.equal(message.text,'text:txt')
+    assert.equal(message.html,'html:HTML')
+
+    template = new Notificator.EmailChannel.Template(null,null,null)
+    message = template.getMessage({subject:'subj',text:'txt',html:'HTML'})
+    assert.equal(message.subject,null)
+    assert.equal(message.text,null)
+    assert.equal(message.html,null)
+  )
+
   it('should return default template if not found',(done)->
     channel = notificator.channels[0].channel
     assert.ok(channel)

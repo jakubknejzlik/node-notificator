@@ -97,6 +97,27 @@
         return done();
       });
     });
+    it.only('should get message from template', function() {
+      var message, template;
+      template = new Notificator.EmailChannel.Template('subject:{{subject}}', 'text:{{text}}', 'html:{{html}}');
+      message = template.getMessage({
+        subject: 'subj',
+        text: 'txt',
+        html: 'HTML'
+      });
+      assert.equal(message.subject, 'subject:subj');
+      assert.equal(message.text, 'text:txt');
+      assert.equal(message.html, 'html:HTML');
+      template = new Notificator.EmailChannel.Template(null, null, null);
+      message = template.getMessage({
+        subject: 'subj',
+        text: 'txt',
+        html: 'HTML'
+      });
+      assert.equal(message.subject, null);
+      assert.equal(message.text, null);
+      return assert.equal(message.html, null);
+    });
     it('should return default template if not found', function(done) {
       var channel;
       channel = notificator.channels[0].channel;

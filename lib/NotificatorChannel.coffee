@@ -15,7 +15,9 @@ class ChannelTemplate
   parseObjectValues:(object,data)->
     result = {}
     for key,value of object
-      if typeof value is 'object'
+      if value is null or not value
+        result[key] = null
+      else if typeof value is 'object'
         result[key] = @parseObjectValues(value,data)
       else if typeof value is 'string'
         value = swig.render(value,{locals:data})
