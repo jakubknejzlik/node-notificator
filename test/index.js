@@ -28,11 +28,9 @@
 
   emailChannel = new Notificator.EmailChannel({
     getDestinations: function(receiver, callback) {
-      console.log('aaa');
       return callback(null, [new Notificator.EmailChannel.Destination(emailDestinations[receiver], 'en')]);
     },
     getTemplates: function(event, language, callback) {
-      console.log(event, language);
       return callback(null, [emailTemplates[event]]);
     },
     defaultTemplate: defaultEmailTemplate,

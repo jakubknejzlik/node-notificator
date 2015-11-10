@@ -18,6 +18,11 @@ class Notificator
 
   addChannel:(name,channel)->
     @channels.push({name:name,channel:channel})
+  getChannel:(name)->
+    for channel in @channels
+      if channel.name is name
+        return channel
+    return null
 
   getTemplates:(event,channel,language,callback)->
     channel.getTemplates(event,language,(err,messages)->
@@ -29,7 +34,8 @@ class Notificator
 
   getMessageFromTemplate:(template,receiver,destination,data)->
     data = data or {}
-    data.receiver = receiver
+    if receiver
+      data.receiver = receiver
     data.destination = destination
     return template.getMessage(data)
 
@@ -53,20 +59,14 @@ class Notificator
       data = data or {}
       data._event = event
 
-      async.forEach(@channels,(channel,cb)=>
-        if util.isArray(options?.channels) and channel.name not in options.channels
+      async.forEach(@channels,(channelWrap,cb)=>
+        if util.isArray(options?.channels) and channelWrap.name not in options.channels
           return cb()
-        _channel = channel.channel
-        _channel.getDestinations(receiver,(err,destinations)=>
+        channel = channelWrap.channel
+        channel.getDestinations(receiver,(err,destinations)=>
           return cb(err) if err
           async.forEach(destinations,(destination,cb2)=>
-            @getTemplates(event,_channel,destination.language or @defaultLanguage,(err,templates)=>
-              return cb(err) if err
-              async.forEach(templates,(template,cb)=>
-                message = @getMessageFromTemplate(template,receiver,destination,data)
-                channel.channel.sendMessage(message,destination,cb)
-              ,cb2)
-            )
+            @sendMessage(event,channel,receiver,destination,data,cb2)
           ,cb)
         )
       ,(err)->
@@ -77,5 +77,40 @@ class Notificator
       )
     )
     return deferred.promise.nodeify(callback)
+
+  notifyDestination:(event,channelName,destination,data,options,callback)->
+    deferred = Q.defer()
+
+    if typeof data is 'function'
+      callback = data
+      data = options = undefined
+    else if typeof options is 'function'
+      callback = options
+      options = undefined
+
+    channelWrap = @getChannel(channelName)
+    if not channelWrap
+      throw new Error('could not find channel \'' + channelName + '\'')
+
+    channel = channelWrap.channel
+
+    @sendMessage(event,channel,null,channel.wrappedDestination(destination),data,(err)->
+      if err
+        deferred.reject(err)
+      else
+        deferred.resolve()
+    )
+    return deferred.promise.nodeify(callback)
+
+
+
+  sendMessage:(event,channel,receiver,destination,data,callback)->
+    @getTemplates(event,channel,destination.language or @defaultLanguage,(err,templates)=>
+      return callback(err) if err
+      async.forEach(templates,(template,cb)=>
+        message = @getMessageFromTemplate(template,receiver,destination,data)
+        channel.sendMessage(message,destination,cb)
+      ,callback)
+    )
 
 module.exports = Notificator

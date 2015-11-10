@@ -26,6 +26,11 @@ notificator.notify('test',receiver,messageData,{channels:['gcm']})
     .then(done)
     .catch(done)
 
+// or to notify directly
+notificator.notifyDestination('test','email','john.doe@example.com',messageData)
+    .then(done)
+    .catch(done)
+
 ```
 
 ### Email Channel

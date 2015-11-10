@@ -36,14 +36,19 @@ class NotificatorChannel
       @options.getTemplates = (obj,language,callback)->
         callback(new Error('options.getTemplates not specified'))
 
+  wrappedDestination:(destination)->
+    if destination not instanceof Destination
+      destination = new Destination(destination)
+    return destination
+
+
   getDestinations:(receiver,callback)->
     @options.getDestinations(receiver,(err,_destinations)=>
       return callback(err) if err
       try
         destinations = []
         for destination in _destinations
-          if destination not instanceof Destination
-            destination = new Destination(destination)
+          destination = @wrappedDestination(destination)
           @validateDestination(destination)
           destinations.push(destination)
         callback(null,destinations)

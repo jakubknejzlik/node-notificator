@@ -26,10 +26,8 @@ gcmDestinations = {
 
 emailChannel = new Notificator.EmailChannel({
   getDestinations:(receiver,callback)->
-    console.log('aaa')
     callback(null,[new Notificator.EmailChannel.Destination(emailDestinations[receiver],'en')])
   getTemplates:(event,language,callback)->
-    console.log(event,language)
     callback(null,[emailTemplates[event]])
   defaultTemplate:defaultEmailTemplate
   service: 'MailGun',
@@ -175,6 +173,11 @@ describe('Notificator',()->
 
 #  it.only('should send notification',(done)->
 #    @timeout(5000)
-#    notificator.notify('test','test',{value:970},{__channels:['gcm']}).then(done).catch(done)
+#    notificator.notify('test','test',{value:970},{__channels:['email']}).then(done).catch(done)
+#  )
+
+#  it.only('should send direct notification',(done)->
+#    @timeout(5000)
+#    notificator.notifyDestination('test','email','jakub.knejzlik@gmail.com',{value:970}).then(done).catch(done)
 #  )
 )
