@@ -1,6 +1,6 @@
 {
   "name": "notificator",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "description": "Library for handling custom notifications, emails, APS, GCM...",
   "main": "index.js",
   "scripts": {
