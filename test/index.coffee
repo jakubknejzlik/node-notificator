@@ -64,7 +64,7 @@ gcmChannel = new Notificator.GCMChannel({
 })
 
 describe('Notificator',()->
-  notificator = new Notificator()
+  notificator = new Notificator({debug:yes})
 
   notificator.registerEvent('test')
 
@@ -171,13 +171,13 @@ describe('Notificator',()->
     )
   )
 
-#  it.only('should send notification',(done)->
-#    @timeout(5000)
-#    notificator.notify('test','test',{value:970},{__channels:['email']}).then(done).catch(done)
-#  )
+  it('should send notification',(done)->
+    @timeout(5000)
+    notificator.notify('test','test',{value:970},{__channels:['email']}).then(done).catch(done)
+  )
 
-#  it.only('should send direct notification',(done)->
-#    @timeout(5000)
-#    notificator.notifyDestination('test','email','jakub.knejzlik@gmail.com',{value:970}).then(done).catch(done)
-#  )
+  it('should send direct notification',(done)->
+    @timeout(5000)
+    notificator.notifyDestination('test','email','jakub.knejzlik@gmail.com',{value:970}).then(done).catch(done)
+  )
 )

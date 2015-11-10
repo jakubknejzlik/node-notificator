@@ -73,7 +73,9 @@
 
   describe('Notificator', function() {
     var notificator;
-    notificator = new Notificator();
+    notificator = new Notificator({
+      debug: true
+    });
     notificator.registerEvent('test');
     notificator.addChannel('email', emailChannel);
     notificator.addChannel('apns', apnsChannel);
@@ -169,11 +171,25 @@
         return done();
       });
     });
-    return it('should not sent unknown notification', function(done) {
+    it('should not sent unknown notification', function(done) {
       return notificator.notify('blahevent', 'test')["catch"](function(err) {
         assert.equal(err.message, 'unknown event blahevent');
         return done();
       });
+    });
+    it('should send notification', function(done) {
+      this.timeout(5000);
+      return notificator.notify('test', 'test', {
+        value: 970
+      }, {
+        __channels: ['email']
+      }).then(done)["catch"](done);
+    });
+    return it('should send direct notification', function(done) {
+      this.timeout(5000);
+      return notificator.notifyDestination('test', 'email', 'jakub.knejzlik@gmail.com', {
+        value: 970
+      }).then(done)["catch"](done);
     });
   });
 
