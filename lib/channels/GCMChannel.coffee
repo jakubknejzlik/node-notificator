@@ -16,7 +16,6 @@ class GCMChannel extends NotificatorChannel
   sendMessage:(message,destination,callback)->
     message = new gcm.Message(message)
     @sender.sendNoRetry(message,{registrationIds:[destination.destination]},(errCode,result)->
-      console.log(arguments)
       if errCode
         return callback(new Error('unexpected error with status code: ' + errCode))
       callback(null,result)
