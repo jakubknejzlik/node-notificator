@@ -9,13 +9,24 @@
   Notificator = require('../index');
 
   emailTemplates = {
-    'test': new Notificator.EmailChannel.Template('email subject', 'email body', 'email HTML body')
+    'test': {
+      subject: 'email subject',
+      text: 'email body',
+      html: 'email HTML body'
+    }
   };
 
-  defaultEmailTemplate = new Notificator.EmailChannel.Template('default subject {{receiver}}', 'default email body {{receiver}} {{JSON.stringify(_data)}}', 'default email HTML body {{receiver}}');
+  defaultEmailTemplate = {
+    subject: 'default subject {{receiver}}',
+    text: 'default email body {{receiver}} {{JSON.stringify(_data)}}',
+    html: 'default email HTML body {{receiver}}'
+  };
 
   emailDestinations = {
-    'test': 'jakub.knejzlik@gmail.com'
+    'test': {
+      email: 'jakub.knejzlik@gmail.com',
+      lang: 'en'
+    }
   };
 
   apnsDestinations = {
@@ -28,7 +39,7 @@
 
   emailChannel = new Notificator.EmailChannel({
     getDestinations: function(receiver, callback) {
-      return callback(null, [new Notificator.EmailChannel.Destination(emailDestinations[receiver], 'en')]);
+      return callback(null, [emailDestinations[receiver]]);
     },
     getTemplates: function(event, language, callback) {
       return callback(null, [emailTemplates[event]]);
@@ -43,13 +54,30 @@
 
   apnsChannel = new Notificator.APNSChannel({
     getDestinations: function(receiver, callback) {
-      return callback(null, [apnsDestinations[receiver]]);
+      return callback(null, [
+        apnsDestinations[receiver], {
+          token: apnsDestinations[receiver]
+        }
+      ]);
     },
     getTemplates: function(event, language, callback) {
       var template;
-      template = new Notificator.APNSChannel.Template('{{value}} notification test' + event + '_' + language, '{{value+1}}');
+      template = {
+        alert: '{{value}} notification test' + event + '_' + language,
+        '{{value+1}}': '{{value+1}}'
+      };
       return callback(null, [template]);
     },
+    feedbackHandler: function(items) {
+      var i, item, len, results;
+      results = [];
+      for (i = 0, len = items.length; i < len; i++) {
+        item = items[i];
+        results.push(console.log('disable destination:', item.destination, 'disabled since:', item.date));
+      }
+      return results;
+    },
+    feedbackInterval: 600,
     passphrase: 'blah',
     production: true
   });
@@ -138,7 +166,7 @@
       return channel.getDestinations('test', function(err, destinations) {
         assert.ifError(err);
         assert.equal(destinations.length, 1);
-        assert.equal(destinations[0].destination, emailDestinations['test']);
+        assert.equal(destinations[0].destination, emailDestinations['test'].email);
         assert.equal(destinations[0].language, 'en');
         return done();
       });

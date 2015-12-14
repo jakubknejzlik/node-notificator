@@ -37,14 +37,14 @@ notificator.notifyDestination('test','email','john.doe@example.com',messageData)
 ```
 var emailChannel = new Notificator.EmailChannel({
   getDestinations:function(receiver, language, callback){
-    callback(null,[new Notificator.EmailChannel.Destination(receiver.email)]) // suppose we have (for example sequelize) user with email attribute
+    callback(null,[{destination:receiver.email}]) // suppose we have (for example sequelize) user with email attribute
   }
   getTemplates:function(event,language,callback){
-    var template = new Notificator.EmailChannel.Template(
-      'default subject {{receiver}}',
-      'default email body {{receiver}} {{JSON.stringify(_data)}}',
-      'default email HTML body {{receiver}}'
-    )
+    var template = {
+      subject:'default subject {{receiver}}',
+      text:'default email body {{receiver}} {{JSON.stringify(_data)}}',
+      html:'default email HTML body {{receiver}}'
+    }
     callback(null,[template])
   }
 //  defaultTemplate:defaultEmailTemplate,
@@ -64,13 +64,19 @@ notificator.addChannel('email',emailChannel)
 var apnsChannel = new Notificator.APNSChannel({
   getDestinations:function(receiver, language, callback){
     receiver.getApnsDevice().then(function(device){ // suppose we have (for example sequelize) user object with apnsDevice
-        callback(null,[new Notificator.APNSChannel.Destination(device.token,device.language)]);
+        callback(null,[{destination:device.token,language:device.language}]);
     }).catch(callback)
   }
   getTemplates:function(event,language,callback){
-    template = new Notificator.APNSChannel.Template('{{value}} notification test' + event + '_' + language,'{{value+1}}')
+    template = {alert:'{{value}} notification test' + event + '_' + language,badge:'{{value+1}}'}
     callback(null,template)
+  },
+  feedbackHandler:function(items){
+    items.forEach(function(item){
+        console.log('disable destination:',item.destination,'disabled since:',item.date)
+    })
   }
+  feedbackInterval: 600,
   cert:fs.readFileSync(__dirname + '/apns-cert.pem'),
   key:fs.readFileSync(__dirname + '/apns-key.pem'),
   passphrase:'blah',

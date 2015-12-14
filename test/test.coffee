@@ -5,17 +5,21 @@ Notificator = require('../index')
 
 
 emailTemplates = {
-  'test':new Notificator.EmailChannel.Template('email subject','email body','email HTML body')
+  'test':{
+    subject:'email subject'
+    text: 'email body'
+    html: 'email HTML body'
+  }
 }
 
-defaultEmailTemplate = new Notificator.EmailChannel.Template(
-  'default subject {{receiver}}',
-  'default email body {{receiver}} {{JSON.stringify(_data)}}',
-  'default email HTML body {{receiver}}'
-)
+defaultEmailTemplate = {
+  subject: 'default subject {{receiver}}'
+  text: 'default email body {{receiver}} {{JSON.stringify(_data)}}',
+  html: 'default email HTML body {{receiver}}'
+}
 
 emailDestinations = {
-  'test':'jakub.knejzlik@gmail.com'
+  'test':{email:'jakub.knejzlik@gmail.com',lang:'en'}
 }
 apnsDestinations = {
   'test':'d1ed7c9829ab244e52645e18008f49867bcd1fa04a4913274d5a23071d5af3d8'
@@ -26,7 +30,7 @@ gcmDestinations = {
 
 emailChannel = new Notificator.EmailChannel({
   getDestinations:(receiver,callback)->
-    callback(null,[new Notificator.EmailChannel.Destination(emailDestinations[receiver],'en')])
+    callback(null,[emailDestinations[receiver]])
   getTemplates:(event,language,callback)->
     callback(null,[emailTemplates[event]])
   defaultTemplate:defaultEmailTemplate
@@ -39,10 +43,16 @@ emailChannel = new Notificator.EmailChannel({
 
 apnsChannel = new Notificator.APNSChannel({
   getDestinations:(receiver,callback)->
-    callback(null,[apnsDestinations[receiver]])
+    callback(null,[apnsDestinations[receiver],{token:apnsDestinations[receiver]}])
   getTemplates:(event,language,callback)->
-    template = new Notificator.APNSChannel.Template('{{value}} notification test' + event + '_' + language,'{{value+1}}')
+    template = {
+      alert:'{{value}} notification test' + event + '_' + language,'{{value+1}}'
+    }
     callback(null,[template])
+  feedbackHandler:(items)->
+    for item in items
+      console.log('disable destination:',item.destination,'disabled since:',item.date)
+  feedbackInterval: 600
 #  cert:fs.readFileSync(__dirname + '/apns-cert.pem')
 #  key:fs.readFileSync(__dirname + '/apns-key.pem')
   passphrase:'blah'
@@ -133,7 +143,7 @@ describe('Notificator',()->
     channel.getDestinations('test',(err,destinations)->
       assert.ifError(err)
       assert.equal(destinations.length,1)
-      assert.equal(destinations[0].destination,emailDestinations['test'])
+      assert.equal(destinations[0].destination,emailDestinations['test'].email)
       assert.equal(destinations[0].language,'en')
       done()
     )

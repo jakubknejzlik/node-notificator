@@ -1,5 +1,6 @@
 nodemailer = require('nodemailer')
 validator = require('validator')
+util = require('util')
 
 NotificatorChannel = require('../NotificatorChannel')
 
@@ -39,11 +40,21 @@ class EmailChannel extends NotificatorChannel
       throw new Error('email template must have text or html')
 
   validateDestination:(destination)->
+    console.log('!!!')
     super(destination)
     if not validator.isEmail(destination.destination)
-      throw new Error(destination.destination + ' is not valid email')
+      throw new Error(util.format(destination.destination) + ' is not valid email')
     return yes
 
+  wrappedDestination:(destination)->
+    if destination?.email
+      destination.destination = destination.email
+      delete destination.email
+    return super(destination)
+
+
+  transformTemplate:(template)->
+    return new EmailTemplate(template.subject,template.text,template.html)
 
 EmailChannel.Template = EmailTemplate
 
