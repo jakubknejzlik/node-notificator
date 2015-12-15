@@ -95,7 +95,7 @@ describe('Notificator',()->
 #  )
 
   it('should have number of channels',()->
-    assert.equal(notificator.channels.length,3)
+    assert.equal(notificator.channels.length,2)
   )
 
   it('should find template',(done)->

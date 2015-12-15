@@ -78,7 +78,7 @@
     notificator.addChannel('email', emailChannel);
     notificator.addChannel('gcm', gcmChannel);
     it('should have number of channels', function() {
-      return assert.equal(notificator.channels.length, 3);
+      return assert.equal(notificator.channels.length, 2);
     });
     it('should find template', function(done) {
       var channel;
