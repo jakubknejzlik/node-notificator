@@ -1,5 +1,6 @@
 apn = require('apn')
 async = require('async')
+extend = require('extend')
 
 NotificatorChannel = require('../NotificatorChannel')
 
@@ -21,11 +22,13 @@ class APNSChannel extends NotificatorChannel
   constructor:(options)->
     @connection = new apn.Connection(options)
     @connection.on('error',console.error)
-    @feedback = new apn.feedback({
+
+    feedbackOptions = extend(options,{
       production:options.production,
       batchFeedback: yes,
       interval: options.feedbackInterval or 600
     })
+    @feedback = new apn.feedback(feedbackOptions)
 
     if options.feedbackHandler
       @feedback.on('feedback',(feedbacks)->

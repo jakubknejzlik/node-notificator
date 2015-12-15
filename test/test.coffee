@@ -41,23 +41,23 @@ emailChannel = new Notificator.EmailChannel({
   }
 })
 
-#apnsChannel = new Notificator.APNSChannel({
-#  getDestinations:(receiver,callback)->
-#    callback(null,[apnsDestinations[receiver],{token:apnsDestinations[receiver]}])
-#  getTemplates:(event,language,callback)->
-#    template = {
-#      alert:'{{value}} notification test' + event + '_' + language,'{{value+1}}'
-#    }
-#    callback(null,[template])
-#  feedbackHandler:(items)->
-#    for item in items
-#      console.log('disable destination:',item.destination,'disabled since:',item.date)
-#  feedbackInterval: 600
-##  cert:fs.readFileSync(__dirname + '/apns-cert.pem')
-##  key:fs.readFileSync(__dirname + '/apns-key.pem')
-#  passphrase:'blah'
-#  production:yes
-#})
+apnsChannel = new Notificator.APNSChannel({
+  getDestinations:(receiver,callback)->
+    callback(null,[apnsDestinations[receiver],{token:apnsDestinations[receiver]}])
+  getTemplates:(event,language,callback)->
+    template = {
+      alert:'{{value}} notification test' + event + '_' + language,'{{value+1}}'
+    }
+    callback(null,[template])
+  feedbackHandler:(items)->
+    for item in items
+      console.log('disable destination:',item.destination,'disabled since:',item.date)
+  feedbackInterval: 600
+#  cert:fs.readFileSync(__dirname + '/apns-cert.pem')
+#  key:fs.readFileSync(__dirname + '/apns-key.pem')
+  passphrase:'blah'
+  production:yes
+})
 
 gcmChannel = new Notificator.GCMChannel({
   getDestinations:(receiver,callback)->
@@ -79,7 +79,7 @@ describe('Notificator',()->
   notificator.registerEvent('test')
 
   notificator.addChannel('email',emailChannel)
-#  notificator.addChannel('apns',apnsChannel)
+  notificator.addChannel('apns',apnsChannel)
   notificator.addChannel('gcm',gcmChannel)
 
 #  it.only('should send push notification',(done)->
@@ -95,7 +95,7 @@ describe('Notificator',()->
 #  )
 
   it('should have number of channels',()->
-    assert.equal(notificator.channels.length,2)
+    assert.equal(notificator.channels.length,3)
   )
 
   it('should find template',(done)->
