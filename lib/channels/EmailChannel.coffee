@@ -40,7 +40,6 @@ class EmailChannel extends NotificatorChannel
       throw new Error('email template must have text or html')
 
   validateDestination:(destination)->
-    console.log('!!!')
     super(destination)
     if not validator.isEmail(destination.destination)
       throw new Error(util.format(destination.destination) + ' is not valid email')

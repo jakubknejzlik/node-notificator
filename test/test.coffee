@@ -153,7 +153,7 @@ describe('Notificator',()->
     channel = notificator.channels[0].channel
     assert.ok(channel)
     channel.getDestinations('invalid receiver',(err,destinations)->
-      assert.equal(err.message,'undefined is not valid email')
+      assert.equal(err.message,'undefined is not a valid email')
       done()
     )
   )
