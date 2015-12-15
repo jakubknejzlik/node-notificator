@@ -176,7 +176,7 @@
       channel = notificator.channels[0].channel;
       assert.ok(channel);
       return channel.getDestinations('invalid receiver', function(err, destinations) {
-        assert.equal(err.message, 'undefined is not a valid email');
+        assert.equal(err.message, 'undefined is not a valid destination');
         return done();
       });
     });
