@@ -95,11 +95,11 @@ class Notificator
 
     channel = channelWrap.channel
 
-    @sendMessage(event,channel,null,channel.wrappedDestination(destination),data,(err)->
+    @sendMessage(event,channel,null,channel.wrappedDestination(destination),data,(err,info)->
       if err
         deferred.reject(err)
       else
-        deferred.resolve()
+        deferred.resolve(info)
     )
     return deferred.promise.nodeify(callback)
 
