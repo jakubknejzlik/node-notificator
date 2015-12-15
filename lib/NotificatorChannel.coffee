@@ -1,5 +1,5 @@
 swig = require('swig')
-
+util = require('util')
 
 class Destination
   constructor:(@destination,@language = null)->
@@ -38,7 +38,10 @@ class NotificatorChannel
 
   wrappedDestination:(destination)->
     if destination not instanceof Destination
-      destination = new Destination(destination)
+      if typeof destination isnt 'string'
+        destination = new Destination(destination.destination,destination.language or destination.lang)
+      else
+        destination = new Destination(destination)
     return destination
 
 
@@ -48,7 +51,10 @@ class NotificatorChannel
       try
         destinations = []
         for destination in _destinations
-          destination = @wrappedDestination(destination)
+          if typeof destination is 'object'
+            destination = Object.create(destination)
+          if destination
+            destination = @wrappedDestination(destination)
           @validateDestination(destination)
           destinations.push(destination)
         callback(null,destinations)
@@ -71,22 +77,32 @@ class NotificatorChannel
       if templates.length is 0 and @options.defaultTemplate
         templates = [@options.defaultTemplate]
       try
+        transformedTemplates = []
         for template in templates
+          transformedTemplates.push(@transformTemplate(template))
+        for template in transformedTemplates
           @validateTemplate(template)
-        @debug('gottemplates',err,templates)
-        callback(null,templates)
+        @debug('gottemplates',transformedTemplates)
+        callback(null,transformedTemplates)
       catch err
         callback(err)
     )
+
+  transformTemplate:(template)->
+    if template not instanceof ChannelTemplate
+      throw new Error('template must be type of ChannelTemplate and transformTemplate wasn\'t used')
+    return template
+
+
 
   sendMessage:(message,destination,callback)->
     return callback(new Error('sendMessage not implemented'))
 
   validateDestination:(destination)->
-    return destination instanceof Destination
+    if not destination
+      throw new Error(util.format(destination) + ' is not a valid destination')
+    return yes
   validateTemplate:(template)->
-    if template not instanceof ChannelTemplate
-      throw new Error('template must be instance of ChannelTemplate (' + typeof template + ')')
     return yes
 
   debug:()->
