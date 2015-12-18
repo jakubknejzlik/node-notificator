@@ -72,7 +72,7 @@
   describe('Notificator', function() {
     var notificator;
     notificator = new Notificator({
-      debug: true
+      dummy: true
     });
     notificator.registerEvent('test');
     notificator.addChannel('email', emailChannel);
