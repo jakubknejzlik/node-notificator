@@ -39,7 +39,7 @@ var emailChannel = new Notificator.EmailChannel({
   getDestinations:function(receiver, language, callback){
     callback(null,[{destination:receiver.email}]) // suppose we have (for example sequelize) user with email attribute
   }
-  getTemplates:function(event,language,callback){
+  getTemplates:function(info,callback){
     var template = {
       subject:'default subject {{receiver}}',
       text:'default email body {{receiver}} {{JSON.stringify(_data)}}',
@@ -67,8 +67,8 @@ var apnsChannel = new Notificator.APNSChannel({
         callback(null,[{destination:device.token,language:device.language}]);
     }).catch(callback)
   }
-  getTemplates:function(event,language,callback){
-    template = {alert:'{{value}} notification test' + event + '_' + language,badge:'{{value+1}}'}
+  getTemplates:function(info,callback){
+    template = {alert:'{{value}} notification test' + info.event + '_' + info.language,badge:'{{value+1}}'}
     callback(null,template)
   },
   feedbackHandler:function(items){
@@ -95,10 +95,10 @@ var gcmChannel = new Notificator.GCMChannel({
       callback(null,[new Notificator.GCMChannel.Destination(device.token,device.language)]);
     }).catch(callback)
   },
-  getTemplates:function(event,language,callback){
+  getTemplates:function(info,callback){
     template = new Notificator.GCMChannel.Template({
       data:{
-        title:'{{value}}' + event + '_' + language,
+        title:'{{value}}' + info.event + '_' + info.language,
         message:'{{value}} body'
       }
     })
