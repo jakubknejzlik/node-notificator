@@ -33,7 +33,7 @@ class APNSChannel extends NotificatorChannel
     if options.feedbackHandler
       @feedback.on('feedback',(feedbacks)->
         items = []
-        for item in feedback
+        for item in feedbacks
           items.push({
             destination:item.device.toString(),
             date: new Date(item.time)
