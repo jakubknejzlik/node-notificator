@@ -115,9 +115,10 @@ class Notificator
       return callback(err) if err
       async.forEach(templates,(template,cb)=>
         message = @getMessageFromTemplate(template,receiver,destination,data)
-        if @options.debug
+        if @options.logging
           console.log('Notificator: sending message',message,', to',destination)
-          async.nextTick(callback)
+        if @options.dummy
+          async.nextTick(cb)
         else
           channel.sendMessage(message,destination,cb)
       ,callback)
