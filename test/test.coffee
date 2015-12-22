@@ -49,9 +49,9 @@ apnsChannel = new Notificator.APNSChannel({
       alert:'{{value}} notification test' + info.event + '_' + info.language,'{{value+1}}'
     }
     callback(null,[template])
-  feedbackHandler:(items)->
-    for item in items
-      console.log('disable destination:',item.destination,'disabled since:',item.date)
+#  feedbackHandler:(items)->
+#    for item in items
+#      console.log('disable destination:',item.destination,'disabled since:',item.date)
   feedbackInterval: 600
 #  cert:fs.readFileSync(__dirname + '/apns-cert.pem')
 #  key:fs.readFileSync(__dirname + '/apns-key.pem')
@@ -74,7 +74,7 @@ gcmChannel = new Notificator.GCMChannel({
 })
 
 describe('Notificator',()->
-  notificator = new Notificator({debug:yes})
+  notificator = new Notificator({dummy:yes})
 
   notificator.registerEvent('test')
 

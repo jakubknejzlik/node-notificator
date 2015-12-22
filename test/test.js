@@ -68,15 +68,6 @@
       };
       return callback(null, [template]);
     },
-    feedbackHandler: function(items) {
-      var i, item, len, results;
-      results = [];
-      for (i = 0, len = items.length; i < len; i++) {
-        item = items[i];
-        results.push(console.log('disable destination:', item.destination, 'disabled since:', item.date));
-      }
-      return results;
-    },
     feedbackInterval: 600,
     passphrase: 'blah',
     production: true
@@ -102,7 +93,7 @@
   describe('Notificator', function() {
     var notificator;
     notificator = new Notificator({
-      debug: true
+      dummy: true
     });
     notificator.registerEvent('test');
     notificator.addChannel('email', emailChannel);

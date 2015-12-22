@@ -28,9 +28,9 @@ class APNSChannel extends NotificatorChannel
       batchFeedback: yes,
       interval: options.feedbackInterval or 600
     })
-    @feedback = new apn.feedback(feedbackOptions)
 
     if options.feedbackHandler
+      @feedback = new apn.feedback(feedbackOptions)
       @feedback.on('feedback',(feedbacks)->
         items = []
         for item in feedbacks
