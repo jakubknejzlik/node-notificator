@@ -1,5 +1,6 @@
 swig = require('swig')
 util = require('util')
+assert = require('assert')
 
 class Destination
   constructor:(@destination,@language = null)->
@@ -62,8 +63,9 @@ class NotificatorChannel
         callback(err)
     )
 
-  getTemplates:(event,language,callback)->
-    @options.getTemplates(event,language,(err,templates)=>
+  getTemplates:(info,callback)->
+    assert.ok(info.event,'event must be specified when getting templates')
+    @options.getTemplates(info,(err,templates)=>
       return callback(err) if err
 
       templates = templates or []

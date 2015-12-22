@@ -25,8 +25,8 @@ class Notificator
         return channel
     return null
 
-  getTemplates:(event,channel,language,callback)->
-    channel.getTemplates(event,language,(err,messages)->
+  getTemplates:(channel,info,callback)->
+    channel.getTemplates(info,(err,messages)->
       return callback(err) if err
       if messages and not util.isArray(messages)
         messages = [messages]
@@ -106,7 +106,12 @@ class Notificator
 
 
   sendMessage:(event,channel,receiver,destination,data,callback)->
-    @getTemplates(event,channel,destination.language or @defaultLanguage,(err,templates)=>
+    info = {
+      event: event,
+      destination: destination.language or @defaultLanguage,
+      data: data
+    }
+    @getTemplates(channel,info,(err,templates)=>
       return callback(err) if err
       async.forEach(templates,(template,cb)=>
         message = @getMessageFromTemplate(template,receiver,destination,data)

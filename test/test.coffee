@@ -31,8 +31,8 @@ gcmDestinations = {
 emailChannel = new Notificator.EmailChannel({
   getDestinations:(receiver,callback)->
     callback(null,[emailDestinations[receiver]])
-  getTemplates:(event,language,callback)->
-    callback(null,[emailTemplates[event]])
+  getTemplates:(info,callback)->
+    callback(null,[emailTemplates[info.event]])
   defaultTemplate:defaultEmailTemplate
   service: 'MailGun',
   auth: {
@@ -44,9 +44,9 @@ emailChannel = new Notificator.EmailChannel({
 apnsChannel = new Notificator.APNSChannel({
   getDestinations:(receiver,callback)->
     callback(null,[apnsDestinations[receiver],{token:apnsDestinations[receiver]}])
-  getTemplates:(event,language,callback)->
+  getTemplates:(info,callback)->
     template = {
-      alert:'{{value}} notification test' + event + '_' + language,'{{value+1}}'
+      alert:'{{value}} notification test' + info.event + '_' + info.language,'{{value+1}}'
     }
     callback(null,[template])
   feedbackHandler:(items)->
@@ -62,10 +62,10 @@ apnsChannel = new Notificator.APNSChannel({
 gcmChannel = new Notificator.GCMChannel({
   getDestinations:(receiver,callback)->
     callback(null,[gcmDestinations[receiver]])
-  getTemplates:(event,language,callback)->
+  getTemplates:(info,callback)->
     template = new Notificator.GCMChannel.Template({
       data:{
-        title:'{{value}}' + event + '_' + language,
+        title:'{{value}}' + info.event + '_' + info.language,
         message:'{{value}} body'
       }
     })
@@ -101,7 +101,7 @@ describe('Notificator',()->
   it('should find template',(done)->
     channel = notificator.channels[0].channel
     assert.ok(channel)
-    notificator.getTemplates('test',channel,'en',(err,templates)->
+    notificator.getTemplates(channel,{event:'test',language:'en',data:null},(err,templates)->
       assert.ifError(err)
       assert.equal(templates.length,1)
       template = templates[0]
@@ -128,7 +128,7 @@ describe('Notificator',()->
   it('should return default template if not found',(done)->
     channel = notificator.channels[0].channel
     assert.ok(channel)
-    notificator.getTemplates('blah',channel,'en',(err,templates)->
+    notificator.getTemplates(channel,{event:'blah',language:'en',data:null},(err,templates)->
       assert.ifError(err)
       assert.equal(templates.length,1)
       template = templates[0]
@@ -161,7 +161,7 @@ describe('Notificator',()->
   it('should parse template',(done)->
     channel = notificator.channels[0].channel
     assert.ok(channel)
-    notificator.getTemplates('blah',channel,'en',(err,templates)->
+    notificator.getTemplates(channel,{event:'blah',language:'en',data:null},(err,templates)->
       assert.ifError(err)
       assert.ok(templates)
       assert.equal(templates.length,1)

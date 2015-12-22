@@ -41,8 +41,8 @@
     getDestinations: function(receiver, callback) {
       return callback(null, [emailDestinations[receiver]]);
     },
-    getTemplates: function(event, language, callback) {
-      return callback(null, [emailTemplates[event]]);
+    getTemplates: function(info, callback) {
+      return callback(null, [emailTemplates[info.event]]);
     },
     defaultTemplate: defaultEmailTemplate,
     service: 'MailGun',
@@ -60,10 +60,10 @@
         }
       ]);
     },
-    getTemplates: function(event, language, callback) {
+    getTemplates: function(info, callback) {
       var template;
       template = {
-        alert: '{{value}} notification test' + event + '_' + language,
+        alert: '{{value}} notification test' + info.event + '_' + info.language,
         '{{value+1}}': '{{value+1}}'
       };
       return callback(null, [template]);
@@ -86,11 +86,11 @@
     getDestinations: function(receiver, callback) {
       return callback(null, [gcmDestinations[receiver]]);
     },
-    getTemplates: function(event, language, callback) {
+    getTemplates: function(info, callback) {
       var template;
       template = new Notificator.GCMChannel.Template({
         data: {
-          title: '{{value}}' + event + '_' + language,
+          title: '{{value}}' + info.event + '_' + info.language,
           message: '{{value}} body'
         }
       });
@@ -115,7 +115,11 @@
       var channel;
       channel = notificator.channels[0].channel;
       assert.ok(channel);
-      return notificator.getTemplates('test', channel, 'en', function(err, templates) {
+      return notificator.getTemplates(channel, {
+        event: 'test',
+        language: 'en',
+        data: null
+      }, function(err, templates) {
         var template;
         assert.ifError(err);
         assert.equal(templates.length, 1);
@@ -150,7 +154,11 @@
       var channel;
       channel = notificator.channels[0].channel;
       assert.ok(channel);
-      return notificator.getTemplates('blah', channel, 'en', function(err, templates) {
+      return notificator.getTemplates(channel, {
+        event: 'blah',
+        language: 'en',
+        data: null
+      }, function(err, templates) {
         var template;
         assert.ifError(err);
         assert.equal(templates.length, 1);
@@ -184,7 +192,11 @@
       var channel;
       channel = notificator.channels[0].channel;
       assert.ok(channel);
-      return notificator.getTemplates('blah', channel, 'en', function(err, templates) {
+      return notificator.getTemplates(channel, {
+        event: 'blah',
+        language: 'en',
+        data: null
+      }, function(err, templates) {
         var parsedTemplate, template;
         assert.ifError(err);
         assert.ok(templates);
