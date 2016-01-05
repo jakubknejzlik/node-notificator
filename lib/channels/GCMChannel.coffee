@@ -28,7 +28,7 @@ class GCMChannel extends NotificatorChannel
     return yes
 
   transformTemplate:(template)->
-    return new GCMTemplate(template.payload)
+    return new GCMTemplate(template.payload or template)
 
   wrappedDestination:(destination)->
     if destination?.token
