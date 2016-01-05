@@ -52,6 +52,8 @@ class Notificator
       callback = options
       options = undefined
 
+    @log('Notifying: event',event,'receiver',receiver)
+
     async.nextTick(()=>
       if @events and event not in @events
         return deferred.reject(new Error('unknown event ' + event))
@@ -94,8 +96,10 @@ class Notificator
       throw new Error('could not find channel \'' + channelName + '\'')
 
     channel = channelWrap.channel
+    wrappedDestination = channel.wrappedDestination(destination)
 
-    @sendMessage(event,channel,null,channel.wrappedDestination(destination),data,(err,info)->
+    @log('Notifying destination: event',event,'channel',channelName,', to',wrappedDestination)
+    @sendMessage(event,channel,null,wrappedDestination,data,(err,info)->
       if err
         deferred.reject(err)
       else
@@ -106,7 +110,6 @@ class Notificator
 
 
   sendMessage:(event,channel,receiver,destination,data,callback)->
-    @log('Notificator: event',event,'channel',channel.name(),', to',destination)
     info = {
       event: event,
       destination: destination.language or @defaultLanguage,
