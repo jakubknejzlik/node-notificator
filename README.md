@@ -12,7 +12,10 @@ Create notificator, specify channels and their logic of what, when and who send 
 Notificator = require('../index')
 
 
-notificator = new Notificator()
+notificator = new Notificator({
+    logging: false, // log messages
+    dummy: false // don't send notifications (used for tests)
+})
 
 notificator.registerEvent('test') // you can specify wich events are valid
 

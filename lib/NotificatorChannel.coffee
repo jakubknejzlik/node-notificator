@@ -5,6 +5,9 @@ assert = require('assert')
 class Destination
   constructor:(@destination,@language = null)->
 
+  toString:()->
+    return @destination + if @language then "(" + @language + ")" else ""
+
 
 class ChannelTemplate
 
@@ -110,6 +113,9 @@ class NotificatorChannel
   debug:()->
     if @options.debug
       console.log.apply(console,arguments)
+
+  name:()->
+    return 'unknown'
 
 NotificatorChannel.ChannelTemplate = ChannelTemplate
 NotificatorChannel.Destination = Destination

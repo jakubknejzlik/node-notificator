@@ -68,6 +68,9 @@ class APNSChannel extends NotificatorChannel
     return super(destination)
 
 
+  name:()->
+    return 'APNS'
+
 
 APNSChannel.Template = APNSTemplate
 

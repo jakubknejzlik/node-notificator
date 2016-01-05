@@ -8,7 +8,7 @@ class Notificator
   @::channels = []
   @::events = null
   constructor:(@options = {})->
-    @options.debug = @options.debug or no
+    @options.logging = @options.logging or no
 
   registerEvent:(event)->
     @events = @events or []
@@ -106,6 +106,7 @@ class Notificator
 
 
   sendMessage:(event,channel,receiver,destination,data,callback)->
+    @log('Notificator: event',event,'channel',channel.name(),', to',destination)
     info = {
       event: event,
       destination: destination.language or @defaultLanguage,
@@ -115,13 +116,16 @@ class Notificator
       return callback(err) if err
       async.forEach(templates,(template,cb)=>
         message = @getMessageFromTemplate(template,receiver,destination,data)
-        if @options.logging
-          console.log('Notificator: sending message',message,', to',destination)
+        @log('Notificator: sending message',message,', to',destination.toString())
         if @options.dummy
           async.nextTick(cb)
         else
           channel.sendMessage(message,destination,cb)
       ,callback)
     )
+
+  log:()->
+    if @options.logging
+      console.log.apply(console,arguments)
 
 module.exports = Notificator

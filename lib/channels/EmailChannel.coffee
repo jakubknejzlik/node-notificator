@@ -53,6 +53,9 @@ class EmailChannel extends NotificatorChannel
   transformTemplate:(template)->
     return new EmailTemplate(template.subject,template.text,template.html)
 
+  name:()->
+    return 'Email'
+
 EmailChannel.Template = EmailTemplate
 
 module.exports = EmailChannel

@@ -93,7 +93,8 @@
   describe('Notificator', function() {
     var notificator;
     notificator = new Notificator({
-      dummy: true
+      dummy: true,
+      logging: true
     });
     notificator.registerEvent('test');
     notificator.addChannel('email', emailChannel);

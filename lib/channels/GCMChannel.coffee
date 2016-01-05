@@ -36,6 +36,9 @@ class GCMChannel extends NotificatorChannel
       delete destination.token
     return super(destination)
 
+  name:()->
+    return 'GCM'
+
 
 GCMChannel.Template = GCMTemplate
 

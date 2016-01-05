@@ -74,7 +74,7 @@ gcmChannel = new Notificator.GCMChannel({
 })
 
 describe('Notificator',()->
-  notificator = new Notificator({dummy:yes})
+  notificator = new Notificator({dummy:yes,logging:yes})
 
   notificator.registerEvent('test')
 
