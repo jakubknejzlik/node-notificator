@@ -52,7 +52,7 @@ class Notificator
       callback = options
       options = undefined
 
-    @log('Notifying: event',event,'receiver',receiver)
+    @log('Notificator: sending event:',event,', receiver:',receiver.toString())
 
     async.nextTick(()=>
       if @events and event not in @events
@@ -98,7 +98,7 @@ class Notificator
     channel = channelWrap.channel
     wrappedDestination = channel.wrappedDestination(destination)
 
-    @log('Notifying destination: event',event,'channel',channelName,', to',wrappedDestination)
+    @log('Notificator: notifying destination: event',event,'channel',channelName,', to',wrappedDestination)
     @sendMessage(event,channel,null,wrappedDestination,data,(err,info)->
       if err
         deferred.reject(err)
@@ -119,7 +119,7 @@ class Notificator
       return callback(err) if err
       async.forEach(templates,(template,cb)=>
         message = @getMessageFromTemplate(template,receiver,destination,data)
-        @log('Notificator: sending message',message,', to',destination.toString())
+        @log('Notificator: sending message to',destination.toString(),', data',JSON.stringify(message))
         if @options.dummy
           async.nextTick(cb)
         else
