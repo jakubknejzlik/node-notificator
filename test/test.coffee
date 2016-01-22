@@ -188,6 +188,8 @@ describe('Notificator',()->
 
   it('should send direct notification',(done)->
     @timeout(5000)
-    notificator.notifyDestination('test','email','jakub.knejzlik@gmail.com',{value:970}).then(done).catch(done)
+    notificator.notifyDestination('test','email','jakub.knejzlik@gmail.com',{value:970}).then((info)->
+      done()
+    ).catch(console.error)
   )
 )

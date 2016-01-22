@@ -221,7 +221,9 @@
       this.timeout(5000);
       return notificator.notifyDestination('test', 'email', 'jakub.knejzlik@gmail.com', {
         value: 970
-      }).then(done)["catch"](done);
+      }).then(function(info) {
+        return done();
+      })["catch"](console.error);
     });
   });
 

@@ -42,8 +42,11 @@ class Notificator
 
 
 
-  notify:(event,receiver,data,options,callback)->
+  notify:(event,receivers,data,options,callback)->
     deferred = Q.defer()
+
+    if not Array.isArray(receivers)
+      receivers = [receivers]
 
     if typeof data is 'function'
       callback = data
@@ -52,7 +55,6 @@ class Notificator
       callback = options
       options = undefined
 
-    @log('Notificator: sending event:',event,', receiver:',receiver.toString())
 
     async.nextTick(()=>
       if @events and event not in @events
@@ -62,16 +64,20 @@ class Notificator
       data = data or {}
       data._event = event
 
-      async.forEach(@channels,(channelWrap,cb)=>
-        if util.isArray(options?.channels) and channelWrap.name not in options.channels
-          return cb()
-        channel = channelWrap.channel
-        channel.getDestinations(receiver,(err,destinations)=>
-          return cb(err) if err
-          async.forEach(destinations,(destination,cb2)=>
-            @sendMessage(event,channel,receiver,destination,data,cb2)
-          ,cb)
-        )
+      async.forEach(receivers,(receiver,cb)=>
+        @log('Notificator: sending event:',event,', receiver:',receiver.toString())
+
+        async.forEach(@channels,(channelWrap,cb)=>
+          if util.isArray(options?.channels) and channelWrap.name not in options.channels
+            return cb()
+          channel = channelWrap.channel
+          channel.getDestinations(receiver,(err,destinations)=>
+            return cb(err) if err
+            async.forEach(destinations,(destination,cb2)=>
+              @sendMessage(event,channel,receiver,destination,data,cb2)
+            ,cb)
+          )
+        ,cb)
       ,(err)->
         if err
           deferred.reject(err)
@@ -81,7 +87,7 @@ class Notificator
     )
     return deferred.promise.nodeify(callback)
 
-  notifyDestination:(event,channelName,destination,data,options,callback)->
+  notifyDestination:(event,channelName,destinations,data,options,callback)->
     deferred = Q.defer()
 
     if typeof data is 'function'
@@ -95,16 +101,25 @@ class Notificator
     if not channelWrap
       throw new Error('could not find channel \'' + channelName + '\'')
 
-    channel = channelWrap.channel
-    wrappedDestination = channel.wrappedDestination(destination)
+    if not Array.isArray(destinations)
+      destinations = [destinations]
 
-    @log('Notificator: notifying destination: event',event,'channel',channelName,', to',wrappedDestination)
-    @sendMessage(event,channel,null,wrappedDestination,data,(err,info)->
+    async.map(destinations,(destination,cb)=>
+      channel = channelWrap.channel
+      wrappedDestination = channel.wrappedDestination(destination)
+
+      @log('Notificator: notifying destination: event',event,'channel',channelName,', to',wrappedDestination)
+      @sendMessage(event,channel,null,wrappedDestination,data,cb)
+    ,(err,info)->
       if err
         deferred.reject(err)
       else
-        deferred.resolve(info)
+        if destinations.length is 0
+          deferred.resolve(info[0])
+        else
+          deferred.resolve(info)
     )
+
     return deferred.promise.nodeify(callback)
 
 
