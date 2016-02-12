@@ -127,7 +127,7 @@ class Notificator
   sendMessage:(event,channel,receiver,destination,data,callback)->
     info = {
       event: event,
-      destination: destination.language or @defaultLanguage,
+      language: destination.language or @defaultLanguage,
       data: data
     }
     @getTemplates(channel,info,(err,templates)=>
