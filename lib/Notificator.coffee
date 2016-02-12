@@ -9,6 +9,7 @@ class Notificator
   @::events = null
   constructor:(@options = {})->
     @options.logging = @options.logging or no
+    @defaultLanguage = @options.defaultLanguage if @options.defaultLanguage
 
   registerEvent:(event)->
     @events = @events or []
