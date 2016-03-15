@@ -42,7 +42,7 @@ notificator.notifyDestination('test','email',destination,messageData)
 ### Email Channel
 ```
 var emailChannel = new Notificator.EmailChannel({
-  getDestinations:function(receiver, language, callback){
+  getDestinations:function(receiver, callback){
     callback(null,[{destination:receiver.email}]) // suppose we have (for example sequelize) user with email attribute
   }
   getTemplates:function(info,callback){
@@ -68,7 +68,7 @@ notificator.addChannel('email',emailChannel)
 
 ```
 var apnsChannel = new Notificator.APNSChannel({
-  getDestinations:function(receiver, language, callback){
+  getDestinations:function(receiver, callback){
     receiver.getApnsDevice().then(function(device){ // suppose we have (for example sequelize) user object with apnsDevice
         callback(null,[{destination:device.token,language:device.language}]);
     }).catch(callback)
@@ -96,7 +96,7 @@ notificator.addChannel('apns',apnsChannel)
 
 ```
 var gcmChannel = new Notificator.GCMChannel({
-  getDestinations:function(receiver, language, callback){
+  getDestinations:function(receiver, callback){
     receiver.getGcmDevice().then(function(device){ // suppose we have (for example sequelize) user object with gcmDevice
       callback(null,[new Notificator.GCMChannel.Destination(device.token,device.language)]);
     }).catch(callback)
